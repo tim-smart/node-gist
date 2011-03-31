@@ -105,8 +105,6 @@ class Gist
     @client.post 'gists',
       body: body
     , (error, response, body) =>
-      console.log body
-
       id = response.headers.location.split('/').pop() or @id
 
       if id is 'new' or (@id and @id isnt id)

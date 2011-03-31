@@ -85,8 +85,6 @@ put the Gist instance into modify mode.</p>
     <span class="nx">@client</span><span class="p">.</span><span class="nx">post</span> <span class="s1">&#39;gists&#39;</span><span class="p">,</span>
       <span class="nv">body: </span><span class="nx">body</span>
     <span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="o">=&gt;</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">body</span>
-
       <span class="nv">id = </span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span> <span class="o">or</span> <span class="nx">@id</span>
 
       <span class="k">if</span> <span class="nx">id</span> <span class="o">is</span> <span class="s1">&#39;new&#39;</span> <span class="o">or</span> <span class="p">(</span><span class="nx">@id</span> <span class="o">and</span> <span class="nx">@id</span> <span class="o">isnt</span> <span class="nx">id</span><span class="p">)</span>
