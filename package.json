@@ -1,0 +1,16 @@
+{
+  "name": "gist",
+  "description": "Simple Gist constructor.",
+  "version": "0.0.1",
+  "author": "Tim Smart",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/Tim-Smart/node-gist.git"
+  },
+  "engine": [ "node >=0.4.4" ],
+  "dependencies": {
+    "nest": ">=0.0.4",
+    "parallel": ">=0.0.1"
+  },
+  "main": "lib/gist"
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>  <html> <head>   <title>gist.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               gist.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>Node API for Gist</h1>
+
+<p>Constructor to use to communicate with, and manipulate gists on
+gist.github.com</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">path = </span><span class="nx">require</span> <span class="s1">&#39;path&#39;</span>
+<span class="nv">nest = </span><span class="nx">require</span> <span class="s1">&#39;nest&#39;</span>
+<span class="nv">Task = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">).</span><span class="nx">Task</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Helper method to load gist content in parallel.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">loadGist = </span><span class="nf">(c, id, file, callback) -&gt;</span>
+  <span class="nx">c</span><span class="p">.</span><span class="nx">get</span> <span class="s2">&quot;raw/#{id}/#{file}&quot;</span><span class="p">,</span> <span class="nf">(error, response, data) -&gt;</span>
+    <span class="k">return</span> <span class="nx">callback</span> <span class="nx">error</span> <span class="k">if</span> <span class="nx">error</span>
+    <span class="nx">callback</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">data</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>Gist Class</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Gist</span>
+  <span class="nv">constructor: </span><span class="nf">(options) -&gt;</span>
+    <span class="nx">options</span> <span class="o">or=</span> <span class="p">{}</span>
+
+    <span class="vi">@id      = </span><span class="nx">options</span><span class="p">.</span><span class="nx">id</span>      <span class="o">or</span> <span class="kc">null</span>
+    <span class="vi">@private = </span><span class="nx">options</span><span class="p">.</span><span class="nx">private</span> <span class="o">or</span> <span class="kc">no</span>
+
+    <span class="vi">@data   = </span><span class="kc">null</span>
+    <span class="vi">@upload =</span>
+      <span class="nv">file_name: </span>    <span class="p">{}</span>
+      <span class="nv">file_contents: </span><span class="p">{}</span>
+      <span class="nv">file_ext: </span>     <span class="p">{}</span>
+
+    <span class="vi">@description = </span><span class="nx">options</span><span class="p">.</span><span class="nx">description</span> <span class="o">or</span> <span class="s1">&#39;&#39;</span>
+    <span class="vi">@user        = </span><span class="nx">options</span><span class="p">.</span><span class="nx">user</span>
+    <span class="vi">@token       = </span><span class="nx">options</span><span class="p">.</span><span class="nx">token</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>We use a <code>nest</code> client to communicate with the Gist API</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">client: </span><span class="nx">nest</span><span class="p">.</span><span class="nx">createClient</span>
+    <span class="nv">host: </span>  <span class="s1">&#39;gist.github.com&#39;</span>
+    <span class="nv">secure: </span><span class="kc">yes</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Load a gist from an existing id.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">load: </span><span class="nf">(callback) -&gt;</span>
+    <span class="nx">@client</span><span class="p">.</span><span class="nx">get</span> <span class="s2">&quot;api/v1/json/#{@id}&quot;</span><span class="p">,</span>
+      <span class="nv">response: </span><span class="s1">&#39;json&#39;</span>
+    <span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">meta</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="k">return</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="nx">error</span>                           <span class="k">if</span> <span class="nx">error</span>
+      <span class="k">return</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s1">&#39;Could not load gist&#39;</span> <span class="nx">unless</span> <span class="nx">meta</span>
+
+      <span class="nv">meta      = </span><span class="nx">meta</span><span class="p">.</span><span class="nx">gists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="vi">@private  = </span><span class="o">not</span> <span class="nx">meta</span><span class="p">.</span><span class="nx">public</span>
+      <span class="vi">@comments = </span><span class="nx">meta</span><span class="p">.</span><span class="nx">comments</span>
+      <span class="nv">task      = </span><span class="k">new</span> <span class="nx">Task</span>
+
+      <span class="k">for</span> <span class="nx">file</span> <span class="k">in</span> <span class="nx">meta</span><span class="p">.</span><span class="nx">files</span>
+        <span class="nx">task</span><span class="p">.</span><span class="nx">add</span> <span class="nx">file</span><span class="p">,</span> <span class="p">[</span>
+          <span class="nx">loadGist</span>
+          <span class="nx">@client</span>
+          <span class="nx">@id</span>
+          <span class="nx">file</span>
+        <span class="p">]</span>
+
+      <span class="nv">has_error = </span><span class="kc">null</span>
+      <span class="nv">data      = </span><span class="p">{}</span>
+
+      <span class="nx">task</span><span class="p">.</span><span class="nx">run</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">content</span><span class="p">)</span> <span class="o">=&gt;</span>
+        <span class="k">if</span> <span class="nx">name</span> <span class="o">is</span> <span class="kc">null</span>
+          <span class="k">return</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="nx">has_error</span> <span class="k">if</span> <span class="nx">has_error</span>
+          <span class="vi">@data = </span><span class="nx">data</span>
+          <span class="k">return</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">meta</span>
+
+        <span class="k">return</span> <span class="nv">has_error = </span><span class="nx">error</span> <span class="k">if</span> <span class="nx">error</span>
+
+        <span class="nx">data</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">content</span>
+
+    <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Add a file to the gist.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">addFile: </span><span class="nf">(filename, content, extension) -&gt;</span>
+    <span class="nv">extension   = </span><span class="nx">path</span><span class="p">.</span><span class="nx">extname</span> <span class="nx">filename</span> <span class="k">if</span> <span class="nx">filename</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">extension</span>
+    <span class="nx">extension</span> <span class="o">or=</span> <span class="s1">&#39;.txt&#39;</span>
+    <span class="nv">i           = </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">@upload</span><span class="p">.</span><span class="nx">file_name</span><span class="p">).</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="nv">key         = </span><span class="s2">&quot;gistfile#{i}&quot;</span>
+
+    <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_name</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>     <span class="o">=</span> <span class="nx">filename</span> <span class="o">or</span> <span class="s2">&quot;file#{i}#{extension}&quot;</span>
+    <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_contents</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">content</span>
+    <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_ext</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>      <span class="o">=</span> <span class="nx">extension</span>
+
+    <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>We either create the gist and get it's id, or update an already
+created gist. If we create the gist, we then assign the id and
+put the Gist instance into modify mode.</p>
+
+<p><strong>TODO</strong>: Update support.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">save: </span><span class="nf">(callback) -&gt;</span>
+    <span class="nv">body =</span>
+      <span class="nv">description: </span><span class="nx">@description</span>
+      <span class="nv">login: </span>      <span class="nx">@user</span>
+      <span class="nv">token: </span>      <span class="nx">@token</span>
+
+    <span class="nv">body.action_button = </span><span class="s1">&#39;private&#39;</span> <span class="k">if</span> <span class="nx">@private</span>
+
+    <span class="nv">body.file_name     = </span><span class="nx">@upload</span><span class="p">.</span><span class="nx">file_name</span>
+    <span class="nv">body.file_ext      = </span><span class="nx">@upload</span><span class="p">.</span><span class="nx">file_ext</span>
+    <span class="nv">body.file_contents = </span><span class="nx">@upload</span><span class="p">.</span><span class="nx">file_contents</span>
+
+    <span class="nx">@client</span><span class="p">.</span><span class="nx">post</span> <span class="s1">&#39;gists&#39;</span><span class="p">,</span>
+      <span class="nv">body: </span><span class="nx">body</span>
+    <span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">body</span>
+
+      <span class="nv">id = </span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">).</span><span class="nx">pop</span><span class="p">()</span> <span class="o">or</span> <span class="nx">@id</span>
+
+      <span class="k">if</span> <span class="nx">id</span> <span class="o">is</span> <span class="s1">&#39;new&#39;</span> <span class="o">or</span> <span class="p">(</span><span class="nx">@id</span> <span class="o">and</span> <span class="nx">@id</span> <span class="o">isnt</span> <span class="nx">id</span><span class="p">)</span>
+        <span class="nv">error = </span><span class="k">new</span> <span class="nb">Error</span> <span class="s1">&#39;Could not save gist.&#39;</span>
+        <span class="vi">@id   = </span><span class="kc">null</span>
+        <span class="k">return</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span><span class="p">,</span> <span class="nx">error</span>
+
+      <span class="vi">@id  = </span><span class="nx">id</span>
+      <span class="nv">data = </span><span class="p">{}</span>
+
+      <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">filename</span> <span class="k">of</span> <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_name</span>
+        <span class="nx">data</span><span class="p">[</span><span class="nx">filename</span><span class="p">]</span> <span class="o">=</span>
+          <span class="nv">extension: </span><span class="nx">@upload</span><span class="p">.</span><span class="nx">file_ext</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+          <span class="nv">content: </span>  <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_contents</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+
+      <span class="vi">@data = </span><span class="p">{}</span>
+      <span class="vi">@upload.file_name     = </span><span class="p">{}</span>
+      <span class="vi">@upload.file_ext      = </span><span class="p">{}</span>
+      <span class="vi">@upload.file_contents = </span><span class="p">{}</span>
+
+      <span class="k">for</span> <span class="nx">filename</span><span class="p">,</span> <span class="nx">file</span> <span class="k">of</span> <span class="nx">data</span>
+        <span class="nx">@data</span><span class="p">[</span><span class="nx">filename</span><span class="p">]</span>                 <span class="o">=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">content</span>
+        <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_name</span><span class="p">[</span><span class="nx">filename</span><span class="p">]</span>     <span class="o">=</span> <span class="nx">filename</span>
+        <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_ext</span><span class="p">[</span><span class="nx">filename</span><span class="p">]</span>      <span class="o">=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">extension</span>
+        <span class="nx">@upload</span><span class="p">.</span><span class="nx">file_contents</span><span class="p">[</span><span class="nx">filename</span><span class="p">]</span> <span class="o">=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">content</span>
+
+      <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">callback</span>
+
+    <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Export the Gist class</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">module.exports = </span><span class="nx">Gist</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
