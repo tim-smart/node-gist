@@ -1,6 +1,6 @@
 {
-  "name": "gist",
-  "description": "Simple Gist constructor.",
+  "name": "node-gist",
+  "description": "Simple Gist API",
   "version": "0.0.1",
   "author": "Tim Smart",
   "repository": {
