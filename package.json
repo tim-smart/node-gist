@@ -1,16 +1,18 @@
-{
-  "name": "node-gist",
-  "description": "Simple Gist API",
-  "version": "0.0.2",
-  "author": "Tim Smart",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/Tim-Smart/node-gist.git"
-  },
-  "engine": [ "node >=0.4.4" ],
-  "dependencies": {
-    "nest": ">=0.0.4",
-    "parallel": ">=0.0.1"
-  },
-  "main": "lib/gist"
+{ "name"         : "node-gist"
+, "description"  : "Simple Gist API"
+, "version"      : "0.2.0"
+, "author"       : "Tim Smart"
+, "repository"   :
+  { "type"       : "git"
+  , "url"        : "http://github.com/Tim-Smart/node-gist.git"
+  }
+, "engine"       : [ "node 0.4.x" ]
+, "main"         : "./"
+, "scripts"      :
+  { "test"       : "node test/*.test.js"
+  }
+, "dependencies" :
+  { "nest"       : "0.1.x"
+  , "microtest"  : "0.2.x"
+  }
 }
