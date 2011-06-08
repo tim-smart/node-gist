@@ -32,6 +32,8 @@ var Client = exports.Client = function Client (options) {
     , headers:   {}
     }
 
+  options || (options = {})
+
   if (options.token) {
     client_options.headers.Authorization = 'token ' + options.token
   } else if (options.user && options.password) {
