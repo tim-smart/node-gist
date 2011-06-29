@@ -26,7 +26,7 @@ test.describe('new Client no user/token', function () {
 
   CLIENT = new EXPORTS.Client(CONFIG)
 
-  args = clientCallCall.getLastArgs()
+  args = clientCallCall.calls[0].args
   assert.equal(2, args.length)
   assert.equal(CLIENT, args[0])
   assert.deepEqual
@@ -60,7 +60,7 @@ test.describe('new Client basic auth', function () {
 
   CLIENT = new EXPORTS.Client(CONFIG)
 
-  args = clientCallCall.getLastArgs()
+  args = clientCallCall.calls[0].args
   assert.equal(2, args.length)
   assert.equal(CLIENT, args[0])
   assert.deepEqual
@@ -92,7 +92,7 @@ test.describe('new Client', function () {
 
   CLIENT = new EXPORTS.Client(CONFIG)
 
-  args = clientCallCall.getLastArgs()
+  args = clientCallCall.calls[0].args
   assert.equal(2, args.length)
   assert.equal(CLIENT, args[0])
   assert.deepEqual
@@ -123,7 +123,7 @@ test.describe('Client#_request', function () {
 
   CLIENT._request(METHOD, PATH, BODY, CB)
 
-  args = _requestCall.getLastArgs()
+  args = _requestCall.calls[0].args
   assert.equal(4, args.length)
   assert.equal(METHOD, args[0])
   assert.equal(PATH, args[1])
