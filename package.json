@@ -1,12 +1,11 @@
 { "name"         : "node-gist"
 , "description"  : "Simple Gist API"
-, "version"      : "0.2.3"
+, "version"      : "0.2.4"
 , "author"       : "Tim Smart"
 , "repository"   :
   { "type"       : "git"
   , "url"        : "http://github.com/Tim-Smart/node-gist.git"
   }
-, "engine"       : [ "node 0.4.x" ]
 , "main"         : "./"
 , "scripts"      :
   { "test"       : "node test/*.test.js"
