@@ -1,6 +1,6 @@
 { "name"         : "node-gist"
 , "description"  : "Simple Gist API"
-, "version"      : "0.2.4"
+, "version"      : "0.2.5"
 , "author"       : "Tim Smart"
 , "repository"   :
   { "type"       : "git"
@@ -12,6 +12,5 @@
   }
 , "dependencies" :
   { "nest"       : ">=0.1.5"
-  , "microtest"  : "0.2.x"
   }
 }
