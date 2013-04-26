@@ -24,12 +24,14 @@ var nest = require('nest')
 
 var Client = exports.Client = function Client (options) {
   var client_options =
-    { host:     'api.github.com'
-    , secure:    true
-    , response: 'json'
-    , type:     'json'
-    , path:     '/gists'
-    , headers:   {}
+    { host           : 'api.github.com'
+    , secure         : true
+    , response       : 'json'
+    , type           : 'json'
+    , path           : '/gists'
+    , headers        :
+      { 'User-Agent' : 'node-gist'
+      }
     }
 
   options || (options = {})
